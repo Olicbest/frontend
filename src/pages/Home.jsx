@@ -1,8 +1,15 @@
-import React from 'react'
+import React,{useContext} from 'react'
+import JobListing from '../components/JobListing'
+
 
 const Home = () => {
+    
   return (
-    <div>Home</div>
+    
+    <>
+    <h1>Recent Jobs</h1>
+    <JobListing />
+    </>
   )
 }
 

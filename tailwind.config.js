@@ -5,7 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: ["Poppins", "Helvetica", "Arial", "Tahoma", ]
+    },
   },
   plugins: [
     require('daisyui')
