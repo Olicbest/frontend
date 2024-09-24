@@ -10,11 +10,11 @@ const Navbar = () => {
     <div className=" bg-gray-100 w-full fixed mb-16">
   <header className="bg-white shadow-md">
         <nav className="container mx-auto flex justify-between items-center p-4">
-          <div className="text-2xl font-bold text-blue-600">Job<span className="text-gray-800">Search</span></div>
+          <div className="text-2xl font-bold text-blue-600"><Link to="/home">Hire<span className="text-gray-800">Spot</span></Link></div>
           <ul className="hidden md:flex space-x-8 font-medium text-gray-600">
             <li><Link to="#" className="hover:text-blue-600">Home</ Link></li>
             <li><Link to="/" className="hover:text-blue-600">Jobs</ Link></li>
-            <li><Link to="#" className="hover:text-blue-600">About</Link></li>
+            <li><Link to="/about" className="hover:text-blue-600">About</Link></li>
             <li><Link to="#" className="hover:text-blue-600">Contact</Link></li>
           </ul>
           <div className="hidden md:flex space-x-4">

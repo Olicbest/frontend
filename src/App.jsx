@@ -12,6 +12,8 @@ import JobSignup from './pages/JobSignup'
 import AccountSignup from './pages/AccountSignup'
 import LoginJobPoster from './pages/LoginJobPoster'
 import JobPostForm from './pages/JobPostForm'
+import About from './pages/About'
+import Testimonial from './pages/Testimonial'
 
 
 
@@ -25,12 +27,15 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path='home' element={<Home />} />
             <Route path='/contact' element={<Contact />} />
+            <Route path='/about' element={<About />} />
             <Route path='/jobseekeer' element={<Register />} />
             <Route path='/jobsignup' element={<JobSignup />} />
             <Route path='/login' element={<LoginForm />} />
             <Route path='/loginjobposter' element={<LoginJobPoster />} />
             <Route path='/accountsignup' element={<AccountSignup />} />
             <Route path='/JobPostForm' element={<JobPostForm />} />
+            <Route path='/testimonial' element={<Testimonial />} />
+
           </Route>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
