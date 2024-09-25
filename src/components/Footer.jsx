@@ -8,7 +8,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import google1 from '../assets/images/google.png';
 const Footer = () => {
   return (
-    <footer className="bg-white py-6 px-16 shadow-2xl shadow-gray-400 mt-12">
+    <footer className="bg-white pt-6 px-16 shadow shadow-gray-400 mt-12">
       <p className="text-sm text-center pb-3 md:text-left text-gray-600 ">Follow us on:</p>
       <div className="container justify-center mx-auto flex flex-col md:flex-row md:mb-0 px-4">
         {/* Social Icons */}
