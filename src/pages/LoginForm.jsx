@@ -1,139 +1,206 @@
-import React, { useState, useContext } from 'react'; 
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { FaGoogle, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
-import img1 from "../assets/images/loginimg.png";
-import img2 from "../assets/images/loginiimg2.png";
-import img3 from "../assets/images/loginimg3.png";
-import AppContext from '../context/AppContext'; // Import AppContext
+import React, { useContext, useState } from 'react';
+import { FiArrowRight, FiCheckCircle, FiEye, FiEyeOff, FiLock, FiMail, FiMapPin } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import AppContext from '../context/AppContext';
 
 const LoginForm = () => {
+  const { loginUser } = useContext(AppContext);
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { loginUser } = useContext(AppContext); // Access loginUser from context
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setError('');
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const userData = { email, password };
-    await loginUser(userData); // Call the loginUser function with email and password
+    const result = await loginUser({ email, password });
+
+    if (result.success) {
+      navigate('/userprofile');
+    } else {
+      setError(result.error || 'Login failed. Please try again.');
+    }
+
+    setSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen div-container">
-      <div className="social flex w-full">
-        <div className="flex my-28 flex-col justify-start py-5 w-full md:px-6 md:w-2/6">
-          <div className="w-full">
-            <div className="font-bold text-2xl pb-3">
-              <h1>Log in and get productive</h1>
-            </div>
-
-            <p className="text-gray-500 mb-4 text-sm">
-              Use your social account to log in
-            </p>
-
-            <div className="flex w-full space-x-4 mb-4">
-              {/* Facebook Button */}
-              <div className="flex items-center justify-center border w-[7rem] h-10 border-gray-400 hover:border-gray-500 rounded-md">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-1 font-bold rounded-full flex items-center justify-center">
-                  <FaFacebookF size={18} />
-                </button>
-              </div>
-
-              {/* Google Button */}
-              <div className="flex items-center justify-center border w-[7rem] h-10 border-gray-400 hover:border-gray-500 rounded-md">
-                <button className="text-red-500 items-center justify-center font-bold rounded-full flex">
-                  <FaGoogle size={18} />
-                </button>
-              </div>
-
-              {/* LinkedIn Button */}
-              <div className="flex items-center justify-center border border-gray-400 hover:border-gray-500 rounded-md w-[7rem] h-10">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 rounded-full flex items-center justify-center">
-                  <FaLinkedinIn size={18} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center w-full">
-              <hr className="border-t border-gray-300 flex-grow mx-2" />
-              <span className="text-gray-400 text-sm">Or continue with</span>
-              <hr className="border-t border-gray-300 flex-grow mx-2" />
-            </div>
+    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="animate-fade-up rounded-[2rem] border border-app bg-surface p-8 shadow-soft backdrop-blur xl:p-10">
+          <div className="inline-flex items-center rounded-full bg-brand-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-brand-700">
+            Job seeker login
           </div>
+          <h1 className="mt-5 font-display text-4xl font-semibold text-app">Welcome back to your next move.</h1>
+          <p className="mt-4 text-sm leading-7 text-muted">
+            Track applications, explore fresh jobs, and keep your profile ready for the next opportunity.
+          </p>
 
-          {/* Login section */}
-          <div className="flex px-3 flex-col justify-start py-2 w-full md:px-1 bg-white">
-            <form onSubmit={handleLogin}>
-              {/* Email input */}
-              <input
-                type="email"
-                placeholder="Email..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-3 w-full items-center px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
-                required
-              />
-
-              {/* Password input with show/hide icon */}
-              <div className="relative mt-4 w-full">
+          <form className="mt-8 space-y-5" onSubmit={handleLogin}>
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-app">Email address</span>
+              <div className="relative">
+                <FiMail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-1 border border-gray-400 rounded-md focus:outline-none focus:border-gray-500"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="you@example.com"
+                  className="w-full rounded-2xl border border-app bg-app-shell px-12 py-3 text-app outline-none transition focus:border-brand-400"
                   required
                 />
-                <div
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
-                  onClick={togglePasswordVisibility}
+              </div>
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-app">Password</span>
+              <div className="relative">
+                <FiLock className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full rounded-2xl border border-app bg-app-shell px-12 py-3 pr-12 text-app outline-none transition focus:border-brand-400"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted"
+                  onClick={() => setShowPassword((current) => !current)}
                 >
-                  {showPassword ? (
-                    <FiEyeOff className="h-4 w-4 text-gray-500" />
-                  ) : (
-                    <FiEye className="h-5 w-5 text-gray-500" />
-                  )}
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            </label>
+
+            <div className="flex items-center justify-between gap-3 text-sm">
+              <a href="/forgot-password" className="font-semibold text-brand-700 transition hover:text-brand-500">
+                Forgot password?
+              </a>
+              <span className="text-muted">Secure sign in</span>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {submitting ? 'Signing in...' : 'Log in'}
+              <FiArrowRight />
+            </button>
+
+            {error ? <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+          </form>
+
+          <p className="mt-6 text-sm text-muted">
+            Do not have an account?{' '}
+            <Link to="/accountsignup" className="font-semibold text-brand-700 transition hover:text-brand-500">
+              Create one
+            </Link>
+          </p>
+        </div>
+
+        <div className="animate-scale-in relative overflow-hidden rounded-[2rem] border border-app bg-slate-950 p-8 text-white shadow-soft xl:p-10">
+          <div className="orb orb-one" />
+          <div className="orb orb-two" />
+          <div className="mesh-overlay" />
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-brand-200">
+              Candidate workspace
+            </div>
+            <h2 className="mt-4 max-w-xl font-display text-4xl font-semibold leading-tight">
+              Pick up where you left off and keep your job search moving.
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
+              Review saved roles, track recent applications, and stay ready when the right opportunity opens.
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
+              <div className="animate-fade-up rounded-[1.75rem] border border-white/10 bg-white/8 p-5 backdrop-blur">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Recent activity</p>
+                    <h3 className="mt-2 font-display text-2xl font-semibold text-white">Application Tracker</h3>
+                  </div>
+                  <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-300">
+                    Active
+                  </span>
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  {[
+                    { role: 'Product Designer', company: 'Blisscare', meta: 'Remote' },
+                    { role: 'Frontend Engineer', company: 'Merrybet', meta: 'Lagos' },
+                    { role: 'Data Analyst', company: 'EastHopeMart', meta: 'Hybrid' },
+                  ].map((item, index) => (
+                    <div
+                      key={`${item.role}-${item.company}`}
+                      className="animate-slide-in flex items-center justify-between gap-4 rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3"
+                      style={{ animationDelay: `${index * 120}ms` }}
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-white">{item.role}</p>
+                        <p className="truncate text-xs text-slate-400">{item.company}</p>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">
+                        <FiMapPin className="shrink-0" />
+                        {item.meta}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <a
-                href="/forgot-password"
-                className="flex md:w-3/5 py-3 font-bold text-blue-700 hover:text-blue-500 text-sm"
-              >
-                Forgot Password?
-              </a>
+              <div className="space-y-4">
+                <div className="animate-float-soft rounded-[1.75rem] border border-white/10 bg-gradient-to-br from-white/14 to-white/6 p-5 backdrop-blur">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Today</p>
+                  <p className="mt-3 text-4xl font-semibold text-white">12</p>
+                  <p className="mt-2 text-sm text-slate-300">new roles matched your saved preferences</p>
+                </div>
 
-              <div className="mt-4">
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white rounded-md py-1 w-full font-bold hover:bg-blue-700"
-                >
-                  Log in
-                </button>
+                <div className="rounded-[1.75rem] border border-white/10 bg-white/6 p-5 backdrop-blur">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Checklist</p>
+                  <div className="mt-4 space-y-3">
+                    {[
+                      'Profile details completed',
+                      'CV uploaded and ready',
+                      'Job alerts turned on',
+                    ].map((item) => (
+                      <div key={item} className="flex items-center gap-3 text-sm text-slate-200">
+                        <FiCheckCircle className="text-emerald-300" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
+            </div>
 
-              <p className="mt-2 md:text-center text-gray-600">
-                Don't have an account?{" "}
-                <a href="/accountsignup" className="text-blue-600 hover:text-blue-700 font-semibold">
-                Sign up 
-                </a>
-              </p>
-            </form>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              {[
+                { value: '24', label: 'Saved jobs' },
+                { value: '08', label: 'Applications sent' },
+                { value: '03', label: 'Interviews pending' },
+              ].map((item, index) => (
+                <div
+                  key={item.label}
+                  className="animate-fade-up rounded-[1.5rem] border border-white/10 bg-white/5 p-4 text-center backdrop-blur"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <p className="text-2xl font-semibold text-white">{item.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{item.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Conditional Image display for different screen sizes */}
-        <div className=" h-[100vh] hidden md:flex">
-          <img src={img1} alt="Login Image 1" className="block md:hidden lg:hidden xl:hidden" />
-          <img src={img2} alt="Login Image 2" className="hidden md:block lg:hidden xl:hidden" />
-          <img src={img3} alt="Login Image 3" className="hidden lg:block xl:block w-[53rem] h-[41rem]" />
-        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -1,48 +1,62 @@
 import React from 'react';
-import { FaPortrait } from 'react-icons/fa';
+import { FiArrowRight, FiBriefcase, FiUser } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+
+const options = [
+  {
+    title: 'Job seeker',
+    body: 'Create a career profile, apply faster, and manage your job journey from one place.',
+    to: '/jobseeker',
+    icon: FiUser,
+    accent: 'from-brand-500 to-accent-500',
+  },
+  {
+    title: 'Employer',
+    body: 'Open an employer account to post roles, manage hiring, and grow your team with confidence.',
+    to: '/jobsignup',
+    icon: FiBriefcase,
+    accent: 'from-slate-950 to-brand-600',
+  },
+];
 
 const AccountSignup = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="max-w-5xl mx-auto text-center">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8">Create your Account</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Job Seeker Card */}
-          <div className="bg-white md:px-24 shadow-md md:w-11/12 rounded-lg p-8 flex flex-col items-center">
-            <div className="text-purple-600 mb-4">
-              <span className="md:text-8xl">
-                <img src="https://www.jobberman.com/static-assets/img/jobberman-theme/seeker.svg" alt="Job Seeker" />
-              </span>
-            </div>
-            <h2 className="text-xl font-semibold mb-4">Job Seeker</h2>
-            <p className="text-gray-500 mb-6">
-              Are you looking for your dream job? Create a unique career profile with Jobsearch
-            </p>
-            <button className="bg-[#004ab9] text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700">
-              <a href="/jobseekeer">
-               Sign up as job seeker
-              </a>
-            </button>
-          </div>
-
-          {/* Employer Card */}
-          <div className="bg-white md:px-24 shadow-md rounded-lg p-8 flex flex-col items-center">
-            <div className="text-purple-600 mb-4">
-              <img src="	https://www.jobberman.com/static-assets/img/jobberman-theme/employer.svg" alt="" />
-            </div>
-            <h2 className="text-xl font-semibold mb-4">Employer</h2>
-            <p className="text-gray-500 mb-6">
-              Are you looking for quality candidates? Advertise and search with Jobsearch
-            </p>
-            <button className="bg-[#004ab9] text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700">
-             <a href="/jobsignup">
-                Sign up as employer
-             </a> 
-            </button>
-          </div>
-        </div>
+    <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mb-8 text-center">
+        <p className="text-sm uppercase tracking-[0.22em] text-brand-700">Choose your path</p>
+        <h1 className="mt-3 font-display text-4xl font-semibold text-app sm:text-5xl">Create the right kind of account</h1>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-muted sm:text-base">
+          Choose the path that fits you best with a clearer split between candidate and employer journeys, stronger motion, and a more polished visual style.
+        </p>
       </div>
-    </div>
+
+      <div className="grid gap-8 md:grid-cols-2">
+        {options.map((option, index) => {
+          const Icon = option.icon;
+
+          return (
+            <div
+              key={option.title}
+              className="animate-fade-up rounded-[2rem] border border-app bg-surface p-8 shadow-soft"
+              style={{ animationDelay: `${index * 120}ms` }}
+            >
+              <div className={`inline-flex rounded-2xl bg-gradient-to-r ${option.accent} p-4 text-white shadow-soft`}>
+                <Icon className="text-3xl" />
+              </div>
+              <h2 className="mt-6 font-display text-3xl font-semibold text-app">{option.title}</h2>
+              <p className="mt-4 text-sm leading-7 text-muted">{option.body}</p>
+              <Link
+                to={option.to}
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-700"
+              >
+                Continue
+                <FiArrowRight />
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 

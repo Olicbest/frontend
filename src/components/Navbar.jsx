@@ -1,67 +1,82 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { IoIosMenu } from "react-icons/io";
+import { FiMenu, FiX } from 'react-icons/fi';
+import { Link, NavLink } from 'react-router-dom';
+
+const navItems = [
+  { label: 'Home', to: '/' },
+  { label: 'Jobs', to: '/jobs' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
+];
+
+const navLinkClass = ({ isActive }) =>
+  `transition ${isActive ? 'text-app font-semibold' : 'text-muted hover:text-app'}`;
 
 const Navbar = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className=" bg-gray-100 w-full fixed mb-16">
-      <header className="bg-white shadow-md">
-        <nav className="container mx-auto flex justify-between items-center p-4">
-          <div className="text-2xl font-bold text-blue-600">
-            <Link to="/home">Hire<span className="text-gray-800">Spot</span></Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-app bg-app-shell/90 backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <Link to="/" className="font-display text-2xl font-bold tracking-tight text-app transition hover:scale-[1.02]">
+          Hire<span className="text-brand-500">Spot</span>
+        </Link>
+
+        <div className="hidden items-center gap-8 md:flex">
+          {navItems.map((item) => (
+            <NavLink key={item.to} to={item.to} className={navLinkClass}>
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            to="/login"
+            className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
+          >
+            Login
+          </Link>
+          <Link
+            to="/loginjobposter"
+            className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
+          >
+            Post a job
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          className="inline-flex rounded-2xl border border-app p-2 text-app md:hidden"
+          aria-label="Toggle menu"
+        >
+          {open ? <FiX size={22} /> : <FiMenu size={22} />}
+        </button>
+      </nav>
+
+      {open ? (
+        <div className="border-t border-app bg-app-shell px-4 py-4 shadow-soft md:hidden">
+          <div className="flex flex-col gap-3">
+            {navItems.map((item) => (
+              <NavLink key={item.to} to={item.to} className={navLinkClass} onClick={() => setOpen(false)}>
+                {item.label}
+              </NavLink>
+            ))}
+            <Link to="/login" className="text-app" onClick={() => setOpen(false)}>
+              Login
+            </Link>
+            <Link
+              to="/loginjobposter"
+              className="inline-flex w-fit rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white"
+              onClick={() => setOpen(false)}
+            >
+              Post a job
+            </Link>
           </div>
-          <ul className="hidden md:flex space-x-8 font-medium text-gray-600">
-            <li><Link to="#" className="hover:text-blue-600">Home</Link></li>
-            <li><Link to="/" className="hover:text-blue-600">Jobs</Link></li>
-            <li><Link to="/about" className="hover:text-blue-600">About</Link></li>
-            <li><Link to="#" className="hover:text-blue-600">Contact</Link></li>
-          </ul>
-          <div className="hidden md:flex space-x-4">
-            <button className="text-gray-600 hover:text-blue-600">
-              <Link to="/login">Login</Link>
-            </button>
-            <button className="text-gray-600 hover:text-blue-600">
-              <Link to="/accountsignup">Sign Up</Link>
-            </button>
-            <button className="bg-blue-600 text-white text-sm px-4 py-1 rounded-lg hover:bg-blue-700">
-              <Link to="/loginjobposter">Post A Job</Link>
-            </button>
-            
-          </div>
-          {/* Mobile menu */}
-          <div className="md:hidden">
-            <button onClick={toggleDropdown} className="text-gray-600 hover:text-blue-600">
-              <IoIosMenu size={30} />
-            </button>
-          </div>
-        </nav>
-        {/* Dropdown Menu for Mobile */}
-        {dropdownOpen && (
-          <ul className="md:hidden bg-white shadow-md mt-2 font-medium text-gray-600 space-y-2 p-4">
-            <div className="flex space-x-10">
-            <li><Link to="/login" className="block hover:text-blue-600">Login</Link></li>
-            <li><Link to="/accountsignup" className="block hover:text-blue-600">Sign Up</Link></li>
-            </div>
-            <li><Link to="/" className="block hover:text-blue-600">Home</Link></li>
-            <li><Link to="/jobs" className="block hover:text-blue-600">Jobs</Link></li>
-            <li><Link to="/about" className="block hover:text-blue-600">About</Link></li>
-            <li><Link to="/contact" className="block hover:text-blue-600">Contact</Link></li>
-            
-            <li>
-              <button className="bg-blue-600 text-white text-sm px-4 py-1 rounded-lg hover:bg-blue-700">
-                <Link to="/loginjobposter">Post A Job</Link>
-              </button>
-            </li>
-          </ul>
-        )}
-      </header>
-    </div>
+        </div>
+      ) : null}
+    </header>
   );
 };
 

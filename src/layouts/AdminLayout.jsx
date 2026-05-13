@@ -1,16 +1,18 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 const AdminLayout = () => {
   return (
-    <>
-    <Navbar />
-    <Outlet />
-    <Footer />
-    </>
-  )
-}
+    <div className="min-h-screen bg-app text-app">
+      <Navbar />
+      <main className="relative z-10 pt-24">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
-export default AdminLayout
+export default AdminLayout;

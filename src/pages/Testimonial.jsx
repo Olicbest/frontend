@@ -59,6 +59,7 @@ const Testimonial = () => {
             src={testimonials[currentIndex].imageSrc}
             alt={testimonials[currentIndex].alt}
             className="mx-auto mb-4 h-16"
+            loading="lazy"
           />
           <p className="italic text-gray-600 mb-4">"{testimonials[currentIndex].quote}"</p>
           <h3 className="font-semibold">{testimonials[currentIndex].name}</h3>

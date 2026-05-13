@@ -1,42 +1,77 @@
-import React from 'react'
-import { BiTimeFive } from "react-icons/bi"
-import logo1 from "../assets/images/eagle.png"
+import React from 'react';
+import { FiArrowUpRight, FiBriefcase, FiClock, FiMapPin, FiWifi } from 'react-icons/fi';
 
-const JobCard = ({job}) => {
+const formatSkills = (skills = []) => skills.slice(0, 3);
+
+const JobCard = ({ job }) => {
+  const companyName = job.company?.companyName || job.companyName || 'Hiring Company';
+  const postedDate = job.postedAt
+    ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(job.postedAt))
+    : 'New';
+
   return (
-    <div>
-      <div className="jobContainer flex gap-10 justify-center flex-wrap items-center py-10">
-        <div className="group group/item single singleJob w-[250px] p-[20px] bg-white rounded [10px] hover:bg-blue-500 shadow-lg shadow-gray-300/70 hover:shadow-lg">
-        <span className="flex justify-between items-center gap-4">
-          <h1 className="text-[16px] front-semibold text-black group-hover:text-white"> <span className="font-semibold">Title:</span> {job.title}</h1>
-          <span className="flex items-center text-[#ccc] gap-1">
-            <BiTimeFive />Now
-          </span>
-        </span>
-        <h6 className="text-[#ccc]">{job.location}</h6>
+    <article className="group card-spotlight relative overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/85 p-5 shadow-soft backdrop-blur transition duration-300 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(88,57,35,0.16)]">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-500 via-accent-500 to-brand-300 opacity-80" />
 
-        <p className="text-[13px] text-[#959595] pt-[20px] border-t-[2px] mt-[20px] group-hover:text-white">
-        Description: {job.description}
-        </p>
-        <div className="company flex items-center gap-2">
-          <img src={logo1} alt="company logo" className="w-[10%]" />
-          <span className="text-[14px] py-[1rem] block group-hover:text-white">
-          Company: {job.company}
-          </span>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="inline-flex rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-brand-700">
+            {job.category?.name || 'Open Role'}
+          </div>
+          <h3 className="mt-4 font-display text-2xl font-semibold text-slate-950 transition group-hover:text-brand-700">
+            {job.title}
+          </h3>
+          <p className="mt-2 text-sm font-medium text-slate-500">{companyName}</p>
         </div>
-        <div className="text-[13px] text-[#959595] pt-[20px] border-t-[2px] mt-[20px] group-hover:text-white">
-         Position: {job.position}
-        </div>
-        <div className="text-[13px] text-[#959595] pt-[20px] border-t-[2px] mt-[20px] group-hover:text-white">
-        salary: {job.salary}
-        </div>
-        <button className="border-[2px] rounded-[10px] block px-3 py-2 text-[14px] font-semibold text-black hover:bg-white group-hover/item:text-black group-hover:text-white hover:text-black">
-          Apply Now
-        </button>
+        <div className="rounded-2xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600">
+          {postedDate}
         </div>
       </div>
-    </div>
-  )
-}
 
-export default JobCard
+      <p className="mt-5 line-clamp-3 text-sm leading-7 text-slate-600">{job.description}</p>
+
+      <div className="mt-5 flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2">
+          <FiMapPin />
+          {job.location}
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2">
+          <FiWifi />
+          {job.workMode || job.position}
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2">
+          <FiClock />
+          {job.experienceLevel || job.requiredExperience}
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2">
+          <FiBriefcase />
+          {job.position}
+        </span>
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        {formatSkills(job.skills).map((skill) => (
+          <span
+            key={skill}
+            className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
+        <div>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Salary</p>
+          <p className="mt-1 text-sm font-semibold text-slate-900">{job.salary}</p>
+        </div>
+        <button className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:bg-brand-700">
+          View role
+          <FiArrowUpRight />
+        </button>
+      </div>
+    </article>
+  );
+};
+
+export default JobCard;

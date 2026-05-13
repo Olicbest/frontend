@@ -1,87 +1,49 @@
 import React from 'react';
-import { FaFacebookF } from "react-icons/fa";
-import { FaWhatsapp } from "react-icons/fa";
-import { FaLinkedinIn } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import google1 from '../assets/images/google.png';
-const Footer = () => {
-  return (
-    <footer className="bg-white pt-6 px-16 shadow shadow-gray-400 mt-12">
-      <p className="text-sm text-center pb-3 md:text-left text-gray-600 ">Follow us on:</p>
-      <div className="container justify-center mx-auto flex flex-col md:flex-row md:mb-0 px-4">
-        {/* Social Icons */}
-        <div className="flex items-center justify-center space-x-4  mb-4 ">
-          
-          <a href="#" className="text-white p-1 rounded-full bg-pink-600">
-            <i className="text-lg">
-              <FaInstagram />
-            </i>
-          </a>
-          <a href="#" className="text-white p-1 rounded-full bg-blue-700">
-            <i className="text-lg">
-              <FaFacebookF />
-            </i>
-          </a>
-          <a href="#" className="text-white p-1 rounded-full bg-blue-500">
-            <i className="fab fa-linkedin fa-lg">
-              <FaLinkedinIn />
-            </i>
-          </a>
-          <a href="#" className="text-white p-1 rounded-full bg-black">
-            <i className="text-lg">
-              <FaXTwitter />
-            </i>
-          </a>
-          <a href="#" className="text-white p-1 rounded-full bg-red-600">
-            <i className="text-lg">
-              <FaYoutube />
-            </i>
-          </a>
-          <a href="#" className="text-white p-1 rounded-full bg-green-500">
-            <i className="text-lg ">
-              <FaWhatsapp />
-            </i>
-          </a>
-        </div>
+import { FiFacebook, FiInstagram, FiLinkedin, FiTwitter } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
-        {/* Google Play and NDPR Audit */}
-        <div className="flex flex-col md:flex-row items-center md:pl-5">
-          <a href="#">
-            <img src={google1} alt="Get it on Google Play" className="w-32" />
-          </a>
+const Footer = () => (
+  <footer className="mt-16 border-t border-app bg-app-shell text-app backdrop-blur-xl">
+    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
+      <div>
+        <h2 className="font-display text-3xl font-bold text-app">
+          Hire<span className="text-brand-500">Spot</span>
+        </h2>
+        <p className="mt-4 max-w-md text-sm leading-7 text-muted">
+          A more responsive job marketplace for ambitious teams and candidates. Search faster, filter smarter, and move hiring forward.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted">Explore</h3>
+        <div className="mt-4 flex flex-col gap-3 text-sm">
+          <Link to="/" className="text-muted transition hover:text-app">Home</Link>
+          <Link to="/jobs" className="text-muted transition hover:text-app">Jobs</Link>
+          <Link to="/about" className="text-muted transition hover:text-app">About</Link>
+          <Link to="/contact" className="text-muted transition hover:text-app">Contact</Link>
         </div>
       </div>
 
-      {/* Copyright */}
-      <div className="mt-7 border-t border-gray-300 flex justify-center  text-gray-600 text-sm">
-          <p className="pt-1">
-            &copy; 2024 <span className="font-bold">HireSpot</span> 
-          </p>
+      <div>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted">Follow</h3>
+        <div className="mt-4 flex items-center gap-3">
+          {[FiInstagram, FiFacebook, FiLinkedin, FiTwitter].map((Icon, index) => (
+            <a
+              key={`social-${index}`}
+              href="#"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-app bg-surface text-app transition hover:-translate-y-1 hover:border-brand-300 hover:text-brand-600"
+            >
+              <Icon />
+            </a>
+          ))}
         </div>
-    </footer>
-  );
-};
+      </div>
+    </div>
+
+    <div className="border-t border-app px-4 py-4 text-center text-xs text-muted">
+      © 2026 HireSpot. Built for modern hiring teams.
+    </div>
+  </footer>
+);
 
 export default Footer;
-
-
-
-
-
-
-
-
-// import React from 'react';
-
-// const Footer = () => {
-//   return (
-//     <div className="bg-gray-800 mt-16 text-white py-4 text-center">
-//       <p className="text-sm">&copy; 2024 My Website. All rights reserved.</p>
-//       <p className="text-sm">Powered by <span className="font-bold text-blue-500">Olicbest</span></p>
-//     </div>
-//   );
-// };
-
-// export default Footer;

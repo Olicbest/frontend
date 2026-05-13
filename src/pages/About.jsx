@@ -12,177 +12,151 @@ import ims3 from '../assets/images/ims3.png';
 import ims4 from '../assets/images/ims4.png';
 import Testimonial from './Testimonial';
 
+const employerReasons = [
+  {
+    image: im1,
+    title: 'Accelerate your hiring process',
+    body: 'Access over 1.1 million qualified jobseeker profiles, streamlining your path to the perfect hire.',
+  },
+  {
+    image: im2,
+    title: 'Reach quality candidates faster',
+    body: 'Connect with an active talent pool and reduce the time it takes to shortlist the right people.',
+  },
+  {
+    image: im3,
+    title: 'Improve hiring confidence',
+    body: 'Make better hiring decisions with stronger candidate visibility and a clearer recruitment workflow.',
+  },
+];
+
+const jobseekerReasons = [
+  {
+    image: im4,
+    title: 'Connect with verified employers',
+    body: 'Gain access to thousands of top employers in Nigeria looking for talents like you.',
+  },
+  {
+    image: im5,
+    title: 'Customized job alerts',
+    body: 'Stay ahead of the competition with personalised job alerts that help you spot the right role early.',
+  },
+  {
+    image: im6,
+    title: 'Profile and CV enhancement',
+    body: 'Capture recruiters attention with expert profile and CV review services built to help you stand out.',
+  },
+];
+
+const awards = [
+  {
+    image: ims1,
+    title: 'Impact in Talent Development and Youth productivity in Nigeria',
+    body: 'Streetnomics',
+    year: '2024',
+  },
+  {
+    image: ims2,
+    title: 'Certificate of Excellence Unity in Adversity',
+    body: 'The Sabre awards africa',
+    year: '2021',
+  },
+  {
+    image: ims3,
+    title: 'Philanthropic Consulting Company of the Year',
+    body: 'CSR Reporters Philanthropic Award',
+    year: '2020',
+  },
+  {
+    image: ims4,
+    title: 'Philanthropic Consulting Company of the Year',
+    body: 'CSR Reporters Philanthropic Award',
+    year: '2020',
+  },
+];
+
 const About = () => {
   return (
-    <div>
+    <section className="pb-12">
       <div
         style={{ backgroundImage: `url(${about3})` }}
-        className="bg-center bg-cover h-[546px] lg:h-[528px] flex items-center justify-center mt-8"
+        className="mt-6 min-h-[420px] bg-cover bg-center px-4 py-12 sm:px-6 lg:min-h-[520px] lg:px-8"
       >
-        <div
-          id="job"
-          className="bg-white bg-opacity-70 p-8 rounded-lg shadow-lg max-w-3xl text-center"
-        >
-          <h1 className="text-4xl font-bold text-gray-800 mb-6">
-            About HireSpot Nigeria
-          </h1>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            <span className="font-semibold">HireSpot</span> is World leading career development and recruitment
-            solutions company, connecting qualified job seekers with verified
-            employers. HireSpot offers online career development support,
-            training services, and personalised HR solutions for job seekers and
-            employers.
+        <div className="mx-auto flex min-h-[360px] max-w-7xl items-center justify-center">
+          <div
+            id="job"
+            className="glass-card w-full max-w-3xl rounded-[2rem] px-6 py-8 text-center sm:px-8 sm:py-10"
+          >
+            <h1 className="font-display text-3xl font-bold text-slate-900 sm:text-4xl">
+              About HireSpot Nigeria
+            </h1>
+            <p className="mt-5 text-base leading-8 text-slate-700 sm:text-lg">
+              <span className="font-semibold">HireSpot</span> is a career development and recruitment solutions company,
+              connecting qualified job seekers with verified employers. HireSpot offers online career development support,
+              training services, and personalised HR solutions for job seekers and employers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+        <section>
+          <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Top 3 reasons why employers post on HireSpot
+          </h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {employerReasons.map((item) => (
+              <article key={item.title} className="glass-card rounded-[1.75rem] p-6">
+                <img className="w-10" src={item.image} alt={item.title} loading="lazy" />
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Top 3 reasons jobseekers choose HireSpot
+          </h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {jobseekerReasons.map((item) => (
+              <article key={item.title} className="glass-card rounded-[1.75rem] p-6">
+                <img className="w-10" src={item.image} alt={item.title} loading="lazy" />
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">Awards & Memberships</h2>
+          <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-600 sm:text-base">
+            HireSpot is a proud member of the Nigerian German Chamber of Commerce, Nigerian French Chamber of Commerce,
+            Nigerian American Chamber of Commerce, and Nigeria Employers&apos; Consultative Association.
           </p>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {awards.map((item) => (
+              <article
+                key={`${item.title}-${item.year}`}
+                className="glass-card flex flex-col items-center rounded-[1.75rem] px-6 py-8 text-center"
+              >
+                <img src={item.image} alt={item.title} className="mb-6 h-16 w-auto object-contain" loading="lazy" />
+                <p className="text-base font-semibold text-slate-700 sm:text-lg">{item.title}</p>
+                <p className="mt-3 text-sm text-slate-600">{item.body}</p>
+                <p className="mt-4 text-sm text-slate-400">{item.year}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <div className="mt-12">
+          <Testimonial />
         </div>
       </div>
-
-      <div className="pt-5 px-16">
-        <h1 className="md:text-2xl font-bold">
-            Top 3 reasons why Employers post on HireSpot
-        </h1>
-        <div className="grid grid-rows-1 md:grid-cols-3 gap-6 py-9">
-            <div>
-                {/* image */}
-                <img className="w-9" src={im1} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Accelerate your hiring process
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Access over 1.1 million qualified jobseeker profiles, streamlining your path to the perfect hire.
-                </p>
-            </div>
-            <div>
-               {/* image */}
-               <img className="w-9" src={im2} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Accelerate your hiring process
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Access over 1.1 million qualified jobseeker profiles, streamlining your path to the perfect hire.
-                </p>
-            </div>
-            <div>
-               {/* image */}
-               <img className="w-9" src={im3} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Accelerate your hiring process
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Access over 1.1 million qualified jobseeker profiles, streamlining your path to the perfect hire.
-                </p>
-            </div>
-        </div>
-      </div>
-      <div className="pb-3 px-16">
-        <h1 className="md:text-2xl font-bold">
-          Top 3 reasons Jobseekers choose HireSpot to search for jobs
-        </h1>
-        <div className="grid grid-rows-1 md:grid-cols-3 gap-6 py-9">
-            <div>
-                {/* image */}
-                <img className="w-9" src={im4} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Connect with verified employers
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Gain access to thousands of top employers in Nigeria looking for talents like you.
-                </p>
-            </div>
-            <div>
-               {/* image */}
-               <img className="w-9" src={im5} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Customized job alerts
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Stay ahead of the competition with personalised job alerts that ensure you never miss an opportunity tailored to you.
-                </p>
-            </div>
-            <div>
-               {/* image */}
-               <img className="w-9" src={im6} alt="image1" />
-                <h3 className="text-lg py-1 font-semibold">
-                  Profile and CV enhancement
-                </h3>
-                <p className="text-gray-600 font-serif">
-                  Capture recruiters' attention with our expert profile and CV review services.
-                </p>
-            </div>
-        </div>
-      </div>
-      {/* Aword */}
-      <div className="px-16 ">
-        <h1 className="text-lg md:text-3xl font-bold pb-3">
-          Awards & Memberships
-        </h1>
-        <p className="md:text-lg text-gray-500 pr-6">
-          HireSpot is a proud member of the <span className="text-blue-500 cursor-pointer">Nigerian German Chamber of Commerce, Nigerian French Chamber of Commerce, Nigerian American Chamber of Commerce,</span> and <span className="text-blue-500 cursor-pointer">Nigeria Employers' Consultative Association.</span>
-        </p>
-        <div className="grid grid-rows-1 md:grid-cols-2 lg:grid-cols-3 gap-9 py-9">
-        <div className="flex flex-col justify-center items-center text-center border rounded-md border-gray-400 py-10">
-            <img src={ims1} alt="ims3" className="md:w-32 w-28 pb-8" />
-            <p className="pb-3 px-4 md:px-8 font-semibold text-gray-600 md:text-lg">
-              Impact in Talent Development and Youth productivity in Nigeria
-            </p>
-            <p className="pb-5 text-gray-600 md:px-16">
-              Streetnomics
-            </p>
-            <h6 className=" text-gray-400">
-              2024
-            </h6>
-          </div>
-
-          {/* award 2 */}
-          <div className="flex flex-col justify-center items-center text-center border rounded-md border-gray-400 py-10">
-            <img src={ims2} alt="ims3" className="md:w-32 w-28 pb-8" />
-            <p className="pb-3 px-4 md:px-8 font-semibold text-gray-600 md:text-lg">
-              Certificate of Excellence Unity in Adversity
-            </p>
-            <p className="pb-5 text-gray-600 md:px-16">
-            The Sabre awards africa
-            </p>
-            <h6 className=" text-gray-400">
-              2021
-            </h6>
-          </div>
-
-          {/* award 3 */}
-          <div className="flex flex-col justify-center items-center text-center border rounded-md border-gray-400 py-10">
-            <img src={ims3} alt="ims3" className="w-16 pb-8" />
-            <p className="pb-3 px-4 md:px-8 font-semibold text-gray-600 md:text-lg">
-              Philanthropic Consulting Company of the Year
-            </p>
-            <p className="pb-5 text-gray-600 md:px-16">
-              CSR Reporters Philanthropic Award
-            </p>
-            <h6 className=" text-gray-400">
-              2020
-            </h6>
-          </div>
-
-          {/* award 4 */}
-          <div className="flex flex-col justify-center items-center text-center border rounded-md border-gray-400 py-10">
-            <img src={ims4} alt="ims3" className="md:w-32 w-28 pb-8" />
-            <p className="pb-3 px-4 md:px-10 md:text-lg font-semibold text-gray-600">
-              Philanthropic Consulting Company of the Year
-            </p>
-            <p className="pb-5 text-gray-600 md:px-16">
-            CSR Reporters Philanthropic Award
-            </p>
-            <h6 className=" text-gray-400">
-              2020
-            </h6>
-          </div>
-        </div>
-      </div>
-
-
-      {/* testimony */}
-      <Testimonial />
-
-
-
-    </div>
+    </section>
   );
 };
 

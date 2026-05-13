@@ -1,244 +1,211 @@
-import React, { useState } from 'react';
-import { FaEye, FaInfoCircle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import Select from 'react-select';
+import { FiArrowRight, FiEye, FiEyeOff } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import AppContext from '../context/AppContext';
 import useCountries from '../useCountries';
 
+const selectStyles = {
+  control: (base) => ({
+    ...base,
+    minHeight: 50,
+    borderRadius: 16,
+    borderColor: 'rgba(148, 163, 184, 0.28)',
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+  }),
+  menu: (base) => ({
+    ...base,
+    borderRadius: 16,
+    overflow: 'hidden',
+  }),
+};
+
 const Register = () => {
-  // State for form fields
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [gender, setGender] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const navigate = useNavigate();
+  const { registerUser } = useContext(AppContext);
+  const { countries } = useCountries();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showInfo, setShowInfo] = useState(false); // For showing password info
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    day: '',
+    month: '',
+    year: '',
+    gender: '',
+    phoneNumber: '',
+  });
+  const [selectedCountry, setSelectedCountry] = useState(countries[0] || null);
 
-  // Fetch countries using useCountries hook
-  const { countries, loading, error } = useCountries();
-
-  const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const handlePasswordToggle = () => {
-    setShowPassword(prev => !prev);
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setError('');
+    setSuccess('');
 
-  const toggleInfo = () => {
-    setShowInfo(prev => !prev);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fullPhoneNumber = `${selectedCountry?.value} ${phoneNumber}`;
-    console.log({
-      firstName,
-      lastName,
-      email,
-      password,
-      day,
-      month,
-      year,
-      gender,
-      selectedCountry,
-      fullPhoneNumber
+    const result = await registerUser({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: formData.phoneNumber,
+      countryCode: selectedCountry?.value || '+234',
+      country: selectedCountry?.country || 'Nigeria',
+      gender: formData.gender,
+      dateOfBirth: `${formData.year}-${formData.month}-${formData.day}`,
     });
+
+    if (result.success) {
+      setSuccess('Account created successfully. Redirecting to login...');
+      setTimeout(() => navigate('/login'), 1200);
+    } else {
+      setError(result.error || 'Unable to create your account.');
+    }
+
+    setSubmitting(false);
   };
 
   return (
-    <div className="w-full grid mx-auto justify-center">
-      <div className="container text-center mx-auto">
-        <h1 className="font-bold py-4 text-lg md:text-xl">Create a Job Seeker Account</h1>
-        <h3 className="font-semibold pb-5">Your new career is one click away</h3>
-      </div>
+    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="grid gap-8 lg:grid-cols-[0.86fr_1.14fr]">
+        <div className="animate-scale-in rounded-[2rem] border border-app bg-slate-950 p-8 text-white shadow-soft xl:p-10">
+          <p className="text-sm uppercase tracking-[0.22em] text-brand-200">Job seeker registration</p>
+          <h1 className="mt-4 font-display text-4xl font-semibold">Create a profile that is ready to move.</h1>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            This signup flow submits directly to the backend, keeps the page responsive, and now feels smoother and more visually refined.
+          </p>
 
-      {/* Personal info section */}
-      <div className="flex flex-col bg-gray-50 md:flex-row gap-1 md:gap-x-0 border container rounded-lg md:pr-3">
-        <div className="w-full px-3 md:w-1/3 md:p-4" id="personal">
-          <h1 className="text-xl font-bold pb-3">Personal Information</h1>
-          <p className="text-gray-500">This is information pertaining to you as an individual</p>
+          <div className="mt-10 space-y-4">
+            {[
+              'Complete your personal profile in one form',
+              'Clear readable inputs with a single branded visual system',
+              'Direct account creation through the backend API',
+              'Mobile-friendly layout with animated entrance states',
+            ].map((item) => (
+              <div key={item} className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
 
-        
-        {/* Personal info form */}
-        <form onSubmit={handleSubmit} className="grid bg-white grid-cols-1 border-2 rounded-md md:grid-cols-2  px-3 gap-1 w-full py-4 my-8">
-          {/* First and Last Name */}
-          <div>
-            <label className="block font-medium" htmlFor="firstName">First Name <span className="text-red-600 text-lg">*</span></label>
-            <input
-              type="text"
-              id="firstName"
-              className="border border-gray-400 px-2 py-1 outline-none focus:border-gray-500 rounded-md w-full"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-medium" htmlFor="lastName">Last Name <span className="text-red-600 text-lg">*</span></label>
-            <input
-              type="text"
-              id="lastName"
-              className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block font-medium" htmlFor="email">Email Address <span className="text-red-600 text-lg">*</span></label>
-            <input
-              type="email"
-              id="email"
-              className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className="relative">
-            <label className="block font-medium" htmlFor="password">Password <span className="text-red-600 text-lg">*</span></label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <FaEye
-              className="absolute top-10 right-4 cursor-pointer"
-              onClick={handlePasswordToggle}
-            />
-            <FaInfoCircle
-              className="absolute top-10 right-12 text-gray-400 cursor-pointer"
-              onClick={toggleInfo}
-            />
-            {showInfo && <p className="absolute top-14 right-12 bg-white p-2 border border-gray-500 rounded-md text-sm">Password must be at least 8 characters long.</p>}
-          </div>
-
-          {/* Date of Birth */}
-          <div className="md:col-span-2 grid grid-cols-3 gap-2">
+        <form onSubmit={handleSubmit} className="animate-fade-up rounded-[2rem] border border-app bg-surface p-6 shadow-soft sm:p-8">
+          <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className="block font-medium">Day <span className="text-red-600 text-lg">*</span></label>
-              <select
-                className="w-full p-2 border border-gray-400 outline-none focus:border-gray-500 rounded"
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                required
-              >
+              <label className="mb-2 block text-sm font-medium text-app">First name</label>
+              <input name="firstName" value={formData.firstName} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Last name</label>
+              <input name="lastName" value={formData.lastName} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Email address</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 pr-12 text-app outline-none focus:border-brand-400"
+                  required
+                />
+                <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-muted" onClick={() => setShowPassword((current) => !current)}>
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-muted">Use 8-12 characters with uppercase, lowercase, a number, and a symbol.</p>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Day</label>
+              <select name="day" value={formData.day} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
                 <option value="">Day</option>
-                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
-                  <option key={d} value={d}>{d}</option>
+                {Array.from({ length: 31 }, (_, index) => index + 1).map((value) => (
+                  <option key={value} value={String(value).padStart(2, '0')}>{value}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block font-medium">Month <span className="text-red-600 text-lg">*</span></label>
-              <select
-                className="w-full p-2 border border-gray-400 outline-none focus:border-gray-500 rounded"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                required
-              >
+              <label className="mb-2 block text-sm font-medium text-app">Month</label>
+              <select name="month" value={formData.month} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
                 <option value="">Month</option>
-                {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m) => (
-                  <option key={m} value={m}>{m}</option>
+                {Array.from({ length: 12 }, (_, index) => index + 1).map((value) => (
+                  <option key={value} value={String(value).padStart(2, '0')}>{value}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block font-medium">Year <span className="text-red-600 text-lg">*</span></label>
-              <select
-                className="w-full p-2 border border-gray-400 outline-none focus:border-gray-500 rounded"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                required
-              >
+              <label className="mb-2 block text-sm font-medium text-app">Year</label>
+              <select name="year" value={formData.year} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
                 <option value="">Year</option>
-                {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map((y) => (
-                  <option key={y} value={y}>{y}</option>
+                {Array.from({ length: 60 }, (_, index) => new Date().getFullYear() - index).map((value) => (
+                  <option key={value} value={value}>{value}</option>
                 ))}
               </select>
             </div>
-          </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Gender</label>
+              <select name="gender" value={formData.gender} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-          {/* Gender */}
-          <div>
-            <label className="block font-medium">Gender <span className="text-red-600 text-lg">*</span></label>
-            <select
-              className="w-full p-2 border border-gray-400 outline-none focus:border-gray-500 rounded"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              required
-            >
-              <option value="">Select...</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          {/* Country */}
-          <div className="md:col-span-1">
-            <label className="block font-medium">Country <span className="text-red-600 text-lg">*</span></label>
-            <Select
-              options={countries}
-              value={selectedCountry}
-              onChange={setSelectedCountry}
-              placeholder="Select a country..."
-              className="w-full"
-              isSearchable
-              required
-            />
-          </div>
-
-          {/* Phone Number */}
-          <div className="md:col-span-1 md:flex md:items-center md:space-x-2">
-            <div className="w-full">
-              <label className="block font-medium">Mobile Number <span className="text-red-600 text-lg">*</span></label>
-              <input
-                type="text"
-                value={phoneNumber}
-                onChange={handlePhoneNumberChange}
-                className="border border-gray-400 w-full px-2 py-1 focus:border-gray-500 rounded-md outline-none"
-                required
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-medium text-app">Country</label>
+              <Select
+                options={countries}
+                value={selectedCountry}
+                onChange={setSelectedCountry}
+                styles={selectStyles}
+                isSearchable
               />
             </div>
+
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-medium text-app">Mobile number</label>
+              <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required />
+            </div>
           </div>
 
-          {/* Register Button */}
-          <div className="md:col-span-2 mt-4">
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out"
-            >
-              Register
-            </button>
-          </div>
+          {error ? <p className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+          {success ? <p className="mt-5 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{success}</p> : null}
 
-          {/* Already Registered? */}
-          <div className="text-center mt-4">
-            <p>Already registered? <Link to="/login">
-            <button className="text-blue-700 font-semibold">Login</button>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {submitting ? 'Creating account...' : 'Register now'}
+            <FiArrowRight />
+          </button>
+
+          <p className="mt-5 text-sm text-muted">
+            Already registered?{' '}
+            <Link to="/login" className="font-semibold text-brand-700 transition hover:text-brand-500">
+              Log in
             </Link>
-            </p>
-          </div>
+          </p>
         </form>
-        
-    </div>
-    </div>
-    
+      </div>
+    </section>
   );
 };
 

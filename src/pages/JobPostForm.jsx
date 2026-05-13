@@ -1,143 +1,55 @@
-import React, { useState } from "react";
+import React from 'react';
+
+const fields = [
+  'Job Title',
+  'Job Functions',
+  'Industry',
+  'Work Type',
+  'Location',
+  'Qualification',
+  'Experience Reqmt.',
+  'Job Level',
+  'Salary Currency',
+  'Salary',
+];
 
 const JobPostForm = () => {
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
   };
 
   return (
-    <div className="container mx-auto p-6">
-        <h2 className="text-lg flex justify-center md:text-xl md:font-2 font-semibold mb-4">
-          Please add your job details below
-        </h2>
-      <div className="shadow-xl p-2">
-      
-      <form onSubmit={handleSubmit} className="bg-white rounded md:space-x-2 p-6 grid grid-cols-1 md:grid-cols-2">
-        
-
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Job Title <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
+    <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="glass-card rounded-[2rem] p-6 sm:p-8">
+        <div className="text-center">
+          <p className="text-sm uppercase tracking-[0.2em] text-brand-700">Employer workspace</p>
+          <h1 className="mt-3 font-display text-3xl font-semibold text-app sm:text-4xl">
+            Please add your job details below
+          </h1>
         </div>
 
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Job Functions <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Industry <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="mt-8 grid gap-5 md:grid-cols-2">
+          {fields.map((label) => (
+            <div key={label}>
+              <label className="mb-2 block text-sm font-medium text-app">
+                {label} <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                className="w-full rounded-2xl border border-app bg-white/80 px-4 py-3 text-app outline-none transition focus:border-brand-400"
+                required
+              />
+            </div>
+          ))}
 
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Work Type <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Location <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Qualification <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Experience Reqmt. <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Job Level <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        
-        <div>
-        <label className="block font-medium" htmlFor="lastName">Salary Currency <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        
-
-        <div className="">
-        <label className="block font-medium" htmlFor="lastName">Salary <span className="text-red-600 text-lg">*</span></label>
-         <input
-            type="text"
-            id="lastName"
-            className="border border-gray-400 outline-none px-2 py-1 focus:border-gray-500 rounded-md w-full"
-            // value={lastName}
-            required
-          />
-        </div>
-        <div></div>
-        <div className="flex justify-center md:justify-end mt-6">
-        <button className="bg-blue-500 w-full md:w-1/3 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
-          Post Job
-        </button>
-        </div>
-      </form>
-      
+          <div className="md:col-span-2 flex justify-center md:justify-end">
+            <button className="w-full rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 md:w-auto">
+              Post Job
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+    </section>
   );
 };
 

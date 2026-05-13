@@ -1,322 +1,186 @@
-import React, { useState, useRef} from 'react';
-import { FaArrowDownLong } from 'react-icons/fa6';
+import React, { useState } from 'react';
+import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
+const initialForm = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  companyPosition: '',
+  countryCode: '+234',
+  phoneNumber: '',
+  companyName: '',
+  industry: '',
+  website: '',
+  contactPerson: '',
+  address: '',
+  country: 'Nigeria',
+  numberOfEmployees: '',
+  typeOfEmployer: '',
+};
 
 const JobSignup = () => {
-  const [isStep1Complete, setIsStep1Complete] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    position: '',
-    countryCode: '',
-    phoneNumber: '',
-  });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialForm);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  // Create a ref for the Step 2 form
-  const step2Ref = useRef(null);
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const validateStep1 = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setError('');
+    setSuccess('');
 
-    // Check if all fields in Step 1 are filled
-    const { firstName, lastName, email, password, position, countryCode, phoneNumber } = formData;
-    
-    // Ensure no field is empty
-    if (firstName && lastName && email && password && position && countryCode && phoneNumber) {
-      setIsStep1Complete(true); // Enable Step 2
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/jobposter/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-      // Scroll to Step 2 after validation
-      step2Ref.current.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      alert('Please fill out all fields in Step 1');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to create the employer account.');
+      }
+
+      setSuccess('Employer account created successfully. Redirecting to employer login...');
+      setTimeout(() => navigate('/loginjobposter'), 1200);
+    } catch (requestError) {
+      setError(requestError.message || 'Unable to create the employer account.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-        <h2 className="text-2xl font-semibold mb-6">Create an Employer Account</h2>
-        <p className="text-gray-600 mb-4">Reach top talent and find the right candidate today</p>
-      <div className="w-full max-w-5xl bg-white shadow-md rounded-md p-6">
-
-        {/* Step 1: Company Representative Info */}
-        <div className="flex flex-col md:flex-row rounded-md shadow-md bg-gray-50 md:pr-4 py-8 shadow-gray-100">
-          <div className="w-full md:w-2/6">
-          <h3 className="text-xl font-semibold mb-4">Company Representative Information</h3>
-          <p className="text-gray-500">
-            This is information pertaining to you as a representative of the company.
+    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="animate-fade-up rounded-[2rem] border border-app bg-surface p-8 shadow-soft">
+          <p className="text-sm uppercase tracking-[0.22em] text-brand-700">Employer signup</p>
+          <h1 className="mt-4 font-display text-4xl font-semibold text-app">Create a hiring workspace that is ready to post.</h1>
+          <p className="mt-4 text-sm leading-7 text-muted">
+            This employer registration page submits company poster details and company information directly to the backend with a cleaner, more polished visual system.
           </p>
+
+          <div className="mt-8 space-y-4">
+            {[
+              'Representative and company information in one guided form',
+              'Responsive two-column layout on larger screens',
+              'Warm branded surfaces, borders, and text colors',
+              'Smooth motion that still feels clean and professional',
+            ].map((item) => (
+              <div key={item} className="flex items-start gap-3 rounded-[1.5rem] border border-app bg-app-shell p-4">
+                <FiCheckCircle className="mt-1 text-brand-600" />
+                <p className="text-sm leading-6 text-muted">{item}</p>
+              </div>
+            ))}
           </div>
-          <form onSubmit={validateStep1} className="border md:w-4/6 bg-white rounded-md border-gray-300 hover:border-gray-400 p-2 md:p-">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-medium mb-2">First Name <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter first name"
-                  required
-                />
-              </div>
+        </div>
 
-              <div>
-                <label className="block font-medium mb-2">Last Name <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter last name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Work Email <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter work email"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Create Password <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Position in Company <span className="text-red-600 text-lg">*</span></label>
-                <select
-                  name="position"
-                  value={formData.position}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                >
-                  <option value="">Select...</option>
-                  <option>Manager</option>
-                  <option>HR</option>
-                  <option>CEO</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-medium mb-2">Country Code <span className="text-red-600 text-lg">*</span></label>
-                  <select
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    required
-                  >
-                    <option value="">Select...</option>
-                    <option value="Nigeria">Nigeria (+234)</option>
-                    {/* Add more country options */}
+        <form onSubmit={handleSubmit} className="animate-scale-in rounded-[2rem] border border-app bg-surface p-6 shadow-soft sm:p-8">
+          <div className="grid gap-5 md:grid-cols-2">
+            {[
+              ['firstName', 'First name'],
+              ['lastName', 'Last name'],
+              ['email', 'Work email'],
+              ['password', 'Password'],
+              ['companyPosition', 'Position in company'],
+              ['phoneNumber', 'Phone number'],
+              ['companyName', 'Company name'],
+              ['industry', 'Industry'],
+              ['website', 'Website'],
+              ['contactPerson', 'Contact person'],
+              ['country', 'Country'],
+              ['numberOfEmployees', 'Number of employees'],
+              ['typeOfEmployer', 'Type of employer'],
+            ].map(([name, label]) => (
+              <div key={name} className={name === 'address' ? 'md:col-span-2' : ''}>
+                <label className="mb-2 block text-sm font-medium text-app">{label}</label>
+                {name === 'industry' ? (
+                  <select name={name} value={formData[name]} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
+                    <option value="">Select industry</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Retail">Retail</option>
                   </select>
-                </div>
-                <div>
-                  <label className="block font-medium mb-2">Phone Number <span className="text-red-600 text-lg">*</span></label>
+                ) : name === 'numberOfEmployees' ? (
+                  <select name={name} value={formData[name]} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
+                    <option value="">Select size</option>
+                    <option value="1-10">1-10</option>
+                    <option value="11-50">11-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="200+">200+</option>
+                  </select>
+                ) : name === 'typeOfEmployer' ? (
+                  <select name={name} value={formData[name]} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required>
+                    <option value="">Select type</option>
+                    <option value="Direct employer">Direct employer</option>
+                    <option value="Agency">Agency</option>
+                    <option value="Outsourcing partner">Outsourcing partner</option>
+                  </select>
+                ) : (
                   <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    placeholder="Enter phone number"
+                    type={name === 'email' ? 'email' : name === 'website' ? 'url' : name === 'password' ? 'password' : 'text'}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400"
                     required
                   />
-                </div>
+                )}
               </div>
-            </div>
-            <div id="Here" className="mt-4 md:justify-start flex justify-center">
-              <p className="text-gray-600 text-sm">
-                Already have an account? 
-                <a href="/JobPostForm" className="text-blue-600  hover:text-blue-800 font-semibold ml-1">
-                  Login
-                </a>
-                </p>
+            ))}
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-app">Country code</label>
+              <input name="countryCode" value={formData.countryCode} onChange={handleChange} className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400" required />
             </div>
 
-            <div className="text-sm py-6">
-              <p>
-                By clicking "Next", you agree to the
-                <a href="#" className="text-blue-600 px-1">
-                  Terms and Conditions
-                </a> 
-                 and 
-                <a  href="#" className="text-blue-600 px-1">
-                  Privacy Policy
-                </a>
-                of Job Signup. You are also required to verify your email address with the company's email service provider.
-              </p>
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-medium text-app">Address</label>
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                rows="4"
+                className="w-full rounded-2xl border border-app bg-app-shell px-4 py-3 text-app outline-none focus:border-brand-400"
+                required
+              />
             </div>
+          </div>
 
-            <div id="validate" className="flex flex-row justify-end mt-6">
-              <button
-                type="submit"
-                className=" px-2 py-2 flex bg-blue-600 text-white rounded-md"
-              >
-                Next
-                <span className="text-blue-700 py- rounded-md mx-1 text-sm bg-white px-1 py-1 text-center w-full"><FaArrowDownLong /></span>  
-              </button>
-            </div>
-          </form>
-        </div>
+          {error ? <p className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+          {success ? <p className="mt-5 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{success}</p> : null}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {submitting ? 'Creating employer account...' : 'Create employer account'}
+            <FiArrowRight />
+          </button>
+
+          <p className="mt-5 text-sm text-muted">
+            Already have an employer account?{' '}
+            <Link to="/loginjobposter" className="font-semibold text-brand-700 transition hover:text-brand-500">
+              Log in
+            </Link>
+          </p>
+        </form>
       </div>
-      <h1 className="justify-center text-xl items-center py-8 font-extralight">Step 2 of 2</h1>
-
-      {/* Step 2: Company Information - Disabled until Step 1 is complete */}
-      <div ref={step2Ref} className={`w-full max-w-5xl bg-white shadow-md rounded-md p-2 md:p-6 ${!isStep1Complete ? 'opacity-50 pointer-events-none' : ''}`}>
-      <div className={`mb-6 ${!isStep1Complete ? 'opacity-50 pointer-events-none' : ''} flex flex-col md:flex-row rounded-md shadow-md bg-gray-100 py-8 shadow-gray-100`}>
-        <div className="md:w-2/6">
-            <h3 className="text-xl text-center md:text-start font-semibold mb-4"> Company Information</h3>
-            <p className="text-gray-500 text-center md:text-start md:pr-8
-            pb-2 md:pb-0">
-                This information pertains to your company
-            </p>
-        </div>
-          
-          <form id="form2" className="border md:w-4/6 bg-white rounded-md border-gray-300 hover:border-gray-400 py-2">
-            <div className="grid  md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-medium mb-2">Company Name <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md"
-                  placeholder="Enter company name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Industry <span className="text-red-600 text-lg">*</span></label>
-                <select className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md" required>
-                  <option value="">Select...</option>
-                  <option>Tech</option>
-                  <option>Finance</option>
-                  <option>Healthcare</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Number of EE <span className="text-red-600 text-lg">*</span></label>
-                <select className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md" required>
-                  <option value="">Select...</option>
-                  <option>1-10</option>
-                  <option>11-50</option>
-                  <option>51-200</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Type of Employer <span className="text-red-600 text-lg">*</span></label>
-                <select className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md" required>
-                  <option value="">Select...</option>
-                  <option>Direct employer</option>
-                  <option>Agency</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Website <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="url"
-                  className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md"
-                  placeholder="Enter company website"
-                />
-              </div>
-
-              <div>
-                <label className="block font-medium mb-2">Contact Person <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md"
-                  placeholder="Enter contact person"
-                  required
-                />
-              </div>
-
-              <div className="md:pl-2">
-                <label className="block font-medium mb-2">Country <span className="text-red-600 text-lg">*</span></label>
-                <select className="w-full p-2 border border-gray-400 hover:border-gray-500 rounded-md" required>
-                  <option value="">Select...</option>
-                  <option>Nigeria</option>
-                  <option>USA</option>
-                  <option>UK</option>
-                </select>
-              </div>
-
-              <div className="md:pr-3">
-                <label className="block font-medium mb-2">Phone Number <span className="text-red-600 text-lg">*</span></label>
-                <input
-                  type="tel"
-                  className="w-full p-2 border border-gray-400 rounded-md"
-                  placeholder="Enter phone number"
-                  required
-                />
-              </div>
-
-              <div className="col-span-2 md:px-3">
-                <label className="block font-medium mb-2">Address <span className="text-red-600 text-lg">*</span></label>
-                <textarea
-                  className="w-full p-2 border border-gray-400 rounded-md"
-                  placeholder="Enter address"
-                  rows="3"
-                  required
-                ></textarea>
-              </div>
-            </div>
-
-            <div className="">
-            <div className="flex items-center mt-4">
-              <input type="checkbox" className="mr-2 border-gray-400 hover:border-gray-500" required />
-              <label className="text-sm">
-                I agree to the{' '}
-                <a href="#" className="text-blue-600">
-                  TERMS & CONDITIONS
-                </a>{' '}
-                and{' '}
-                <a href="#" className="text-blue-600">
-                  PRIVACY POLICY
-                </a>
-              </label>
-            </div>
-
-            <div className="flex p-3 md:border-t border-gray-400 justify-end mt-6">
-              <button
-                type="submit"
-                className="px-2 py-1 bg-blue-600 text-sm text-white rounded-md"
-              >
-                Create Your Account
-              </button>
-            </div>
-            </div>
-          </form>
-        </div>
-        </div>
-    </div>
+    </section>
   );
 };
 
