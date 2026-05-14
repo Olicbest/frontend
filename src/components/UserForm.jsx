@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useForm } from 'react-hook-form';
 
@@ -7,9 +7,25 @@ const inputClassName =
 
 const UserForm = ({ open, setOpen }) => {
   const { user, updateUserProfile } = useAppContext();
-  const { register, handleSubmit } = useForm({
+  const [error, setError] = useState('');
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: { ...user },
   });
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        email: user?.email || '',
+        phoneNumber: user?.phoneNumber || '',
+        jobTitle: user?.jobTitle || '',
+        location: user?.location || '',
+        about: user?.about || '',
+      });
+      setError('');
+    }
+  }, [open, reset, user]);
 
   const onSubmit = async (data) => {
     if (!updateUserProfile) {
@@ -17,13 +33,13 @@ const UserForm = ({ open, setOpen }) => {
       return;
     }
 
-    const updatedUser = { ...user, ...data };
-    const result = await updateUserProfile(updatedUser);
+    setError('');
+    const result = await updateUserProfile(data);
 
     if (result.success) {
       setOpen(false);
     } else {
-      console.error(result.error);
+      setError(result.error || 'Unable to update your profile.');
     }
   };
 
@@ -60,6 +76,14 @@ const UserForm = ({ open, setOpen }) => {
             <input {...register('jobTitle')} placeholder="Job Title" className={inputClassName} />
           </div>
           <div>
+            <label className="mb-2 block text-sm font-medium text-app">Phone number</label>
+            <input {...register('phoneNumber')} placeholder="Phone Number" className={inputClassName} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-2 block text-sm font-medium text-app">Email address</label>
+            <input type="email" {...register('email')} placeholder="Email Address" className={inputClassName} />
+          </div>
+          <div>
             <label className="mb-2 block text-sm font-medium text-app">Location</label>
             <input {...register('location')} placeholder="Location" className={inputClassName} />
           </div>
@@ -72,6 +96,7 @@ const UserForm = ({ open, setOpen }) => {
               className={`${inputClassName} resize-none`}
             />
           </div>
+          {error ? <p className="sm:col-span-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
           <div className="sm:col-span-2 flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
             <button
               type="button"

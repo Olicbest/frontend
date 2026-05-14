@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiArrowUpRight, FiBriefcase, FiClock, FiMapPin, FiWifi } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 
 const formatSkills = (skills = []) => skills.slice(0, 3);
 
 const JobCard = ({ job }) => {
+  const navigate = useNavigate();
+  const { hasAppliedToJob, user } = useAppContext();
+  const [feedback, setFeedback] = useState('');
   const companyName = job.company?.companyName || job.companyName || 'Hiring Company';
   const postedDate = job.postedAt
     ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(job.postedAt))
     : 'New';
+  const alreadyApplied = hasAppliedToJob(job.id);
+
+  const handleApply = () => {
+    if (!user) {
+      setFeedback('Please log in first to apply for a job.');
+      navigate('/login');
+      return;
+    }
+
+    navigate(`/jobs/${job.id}`);
+  };
 
   return (
     <article className="group card-spotlight relative overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/85 p-5 shadow-soft backdrop-blur transition duration-300 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(88,57,35,0.16)]">
@@ -60,15 +76,35 @@ const JobCard = ({ job }) => {
         ))}
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
+      {feedback ? (
+        <p className="mt-4 text-sm text-brand-700">
+          {feedback}
+        </p>
+      ) : null}
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-5">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Salary</p>
           <p className="mt-1 text-sm font-semibold text-slate-900">{job.salary}</p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:bg-brand-700">
-          View role
-          <FiArrowUpRight />
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={handleApply}
+            disabled={alreadyApplied}
+            className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 transition duration-300 hover:bg-brand-100 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {alreadyApplied ? 'Applied' : 'Apply now'}
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate(`/jobs/${job.id}`)}
+            className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:bg-brand-700"
+          >
+            View role
+            <FiArrowUpRight />
+          </button>
+        </div>
       </div>
     </article>
   );

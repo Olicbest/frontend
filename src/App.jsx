@@ -6,6 +6,7 @@ import AppLayout from './layouts/AppLayout';
 
 const Home = lazy(() => import('./pages/Home'));
 const JobsPage = lazy(() => import('./pages/JobsPage'));
+const JobDetails = lazy(() => import('./pages/JobDetails'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Register = lazy(() => import('./pages/Register'));
@@ -44,6 +45,7 @@ const App = () => {
               <Route index element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/jobs/:id" element={<JobDetails />} />
               <Route path="/joblistings" element={<JobsPage />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />

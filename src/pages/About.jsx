@@ -80,12 +80,13 @@ const About = () => {
     <section className="pb-12">
       <div
         style={{ backgroundImage: `url(${about3})` }}
-        className="mt-6 min-h-[420px] bg-cover bg-center px-4 py-12 sm:px-6 lg:min-h-[520px] lg:px-8"
+        className="relative mt-6 min-h-[420px] overflow-hidden bg-cover bg-center px-4 py-12 sm:px-6 lg:min-h-[520px] lg:px-8"
       >
+        <div className="mesh-overlay" />
         <div className="mx-auto flex min-h-[360px] max-w-7xl items-center justify-center">
           <div
             id="job"
-            className="glass-card w-full max-w-3xl rounded-[2rem] px-6 py-8 text-center sm:px-8 sm:py-10"
+            className="glass-card animate-scale-in w-full max-w-3xl rounded-[2rem] px-6 py-8 text-center sm:px-8 sm:py-10"
           >
             <h1 className="font-display text-3xl font-bold text-slate-900 sm:text-4xl">
               About HireSpot Nigeria
@@ -100,13 +101,17 @@ const About = () => {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
-        <section>
+        <section className="animate-fade-up animate-float-soft">
           <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">
             Top 3 reasons why employers post on HireSpot
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {employerReasons.map((item) => (
-              <article key={item.title} className="glass-card rounded-[1.75rem] p-6">
+            {employerReasons.map((item, index) => (
+              <article
+                key={item.title}
+                className="glass-card animate-fade-up animate-float-soft rounded-[1.75rem] p-6 transition duration-300 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 120}ms` }}
+              >
                 <img className="w-10" src={item.image} alt={item.title} loading="lazy" />
                 <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
@@ -115,13 +120,17 @@ const About = () => {
           </div>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-12 animate-fade-up animate-float-soft" style={{ animationDelay: '120ms' }}>
           <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">
             Top 3 reasons jobseekers choose HireSpot
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {jobseekerReasons.map((item) => (
-              <article key={item.title} className="glass-card rounded-[1.75rem] p-6">
+            {jobseekerReasons.map((item, index) => (
+              <article
+                key={item.title}
+                className="glass-card animate-fade-up animate-float-soft rounded-[1.75rem] p-6 transition duration-300 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 120}ms` }}
+              >
                 <img className="w-10" src={item.image} alt={item.title} loading="lazy" />
                 <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
@@ -130,7 +139,7 @@ const About = () => {
           </div>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-12 animate-fade-up animate-float-soft" style={{ animationDelay: '220ms' }}>
           <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">Awards & Memberships</h2>
           <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-600 sm:text-base">
             HireSpot is a proud member of the Nigerian German Chamber of Commerce, Nigerian French Chamber of Commerce,
@@ -138,10 +147,11 @@ const About = () => {
           </p>
 
           <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {awards.map((item) => (
+            {awards.map((item, index) => (
               <article
                 key={`${item.title}-${item.year}`}
-                className="glass-card flex flex-col items-center rounded-[1.75rem] px-6 py-8 text-center"
+                className="glass-card animate-scale-in animate-float-soft flex flex-col items-center rounded-[1.75rem] px-6 py-8 text-center transition duration-300 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <img src={item.image} alt={item.title} className="mb-6 h-16 w-auto object-contain" loading="lazy" />
                 <p className="text-base font-semibold text-slate-700 sm:text-lg">{item.title}</p>
@@ -152,7 +162,7 @@ const About = () => {
           </div>
         </section>
 
-        <div className="mt-12">
+        <div className="mt-12 animate-fade-up" style={{ animationDelay: '300ms' }}>
           <Testimonial />
         </div>
       </div>

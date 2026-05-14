@@ -203,6 +203,8 @@ const Dashboard = () => {
         admin: data.admin,
       };
 
+      localStorage.removeItem('localUser');
+      localStorage.removeItem('jobPosterAuth');
       setAuth(nextAuth);
       await fetchDashboard({
         'Content-Type': 'application/json',

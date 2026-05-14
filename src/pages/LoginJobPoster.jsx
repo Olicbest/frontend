@@ -30,6 +30,8 @@ const LoginJobPoster = () => {
         throw new Error(data.error || 'Unable to sign in as employer.');
       }
 
+      localStorage.removeItem('localUser');
+      localStorage.removeItem('adminAuth');
       localStorage.setItem('jobPosterAuth', JSON.stringify(data));
       navigate('/JobPostForm');
     } catch (requestError) {

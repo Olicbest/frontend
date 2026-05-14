@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Link, NavLink } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 
 const navItems = [
   { label: 'Home', to: '/' },
@@ -14,6 +15,22 @@ const navLinkClass = ({ isActive }) =>
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { logoutUser, user } = useAppContext();
+  const jobPosterAuth = JSON.parse(localStorage.getItem('jobPosterAuth') || 'null');
+  const adminAuth = JSON.parse(localStorage.getItem('adminAuth') || 'null');
+  const jobPoster = jobPosterAuth?.jobPoster || null;
+  const admin = adminAuth?.admin || null;
+  const canPostJob = Boolean(jobPoster || admin);
+
+  const sessionLabel = user?.firstName || jobPoster?.firstName || admin?.firstName || 'Profile';
+  const sessionLink = user ? '/userprofile' : admin ? '/admin' : '/JobPostForm';
+
+  const handleLogout = () => {
+    logoutUser();
+    localStorage.removeItem('jobPosterAuth');
+    localStorage.removeItem('adminAuth');
+    setOpen(false);
+  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-app bg-app-shell/90 backdrop-blur-xl">
@@ -31,18 +48,46 @@ const Navbar = () => {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            to="/login"
-            className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
-          >
-            Login
-          </Link>
-          <Link
-            to="/loginjobposter"
-            className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
-          >
-            Post a job
-          </Link>
+          {user || jobPoster || admin ? (
+            <>
+              <Link
+                to={sessionLink}
+                className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
+              >
+                {sessionLabel}
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/jobseeker"
+                className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
+              >
+                Register
+              </Link>
+              <Link
+                to="/login"
+                className="rounded-full border border-app px-4 py-2 text-sm font-semibold text-app transition hover:border-brand-300 hover:text-brand-700"
+              >
+                Login
+              </Link>
+            </>
+          )}
+          {canPostJob ? (
+            <Link
+              to="/JobPostForm"
+              className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
+            >
+              Post a job
+            </Link>
+          ) : null}
         </div>
 
         <button
@@ -63,16 +108,38 @@ const Navbar = () => {
                 {item.label}
               </NavLink>
             ))}
-            <Link to="/login" className="text-app" onClick={() => setOpen(false)}>
-              Login
-            </Link>
-            <Link
-              to="/loginjobposter"
-              className="inline-flex w-fit rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white"
-              onClick={() => setOpen(false)}
-            >
-              Post a job
-            </Link>
+            {user || jobPoster || admin ? (
+              <>
+                <Link to={sessionLink} className="text-app" onClick={() => setOpen(false)}>
+                  {sessionLabel}
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-fit text-left text-app"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/jobseeker" className="text-app" onClick={() => setOpen(false)}>
+                  Register
+                </Link>
+                <Link to="/login" className="text-app" onClick={() => setOpen(false)}>
+                  Login
+                </Link>
+              </>
+            )}
+            {canPostJob ? (
+              <Link
+                to="/JobPostForm"
+                className="inline-flex w-fit rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white"
+                onClick={() => setOpen(false)}
+              >
+                Post a job
+              </Link>
+            ) : null}
           </div>
         </div>
       ) : null}
