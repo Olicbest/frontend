@@ -4,6 +4,7 @@ const AppContext = createContext();
 const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const APPLIED_JOBS_STORAGE_KEY = 'hirespot-applied-jobs';
 const USER_PROFILE_STORAGE_KEY = 'hirespot-user-profiles';
+const AUTH_CHANGE_EVENT = 'authchange';
 
 const readUserProfiles = () => {
   try {
@@ -71,6 +72,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem('localUser', JSON.stringify(user || null));
+    window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
   }, [user]);
 
   useEffect(() => {
@@ -174,7 +176,7 @@ export const AppProvider = ({ children }) => {
 
   const loginUser = async (userData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -188,6 +190,33 @@ export const AppProvider = ({ children }) => {
 
       localStorage.removeItem('jobPosterAuth');
       localStorage.removeItem('adminAuth');
+
+      if (data.role === 'ADMIN' && data.admin) {
+        setUser(null);
+        localStorage.setItem(
+          'adminAuth',
+          JSON.stringify({
+            access_token: data.access_token,
+            admin: data.admin,
+          }),
+        );
+        window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
+        return { success: true, role: data.role };
+      }
+
+      if (data.role === 'COMPANY_POSTER' && data.jobPoster) {
+        setUser(null);
+        localStorage.setItem(
+          'jobPosterAuth',
+          JSON.stringify({
+            access_token: data.access_token,
+            jobPoster: data.jobPoster,
+          }),
+        );
+        window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
+        return { success: true, role: data.role };
+      }
+
       const nextUser = mergeStoredProfile(
         {
           ...(data.user || data),
@@ -196,7 +225,7 @@ export const AppProvider = ({ children }) => {
         storedProfiles,
       );
       setUser(nextUser);
-      return { success: true };
+      return { success: true, role: data.role || nextUser.role };
     } catch (requestError) {
       return { success: false, error: requestError.message };
     }
@@ -229,6 +258,7 @@ export const AppProvider = ({ children }) => {
   const logoutUser = () => {
     setUser(null);
     localStorage.removeItem('localUser');
+    window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
   };
 
   const updateUserProfile = async (profileData) => {

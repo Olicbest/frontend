@@ -138,7 +138,23 @@ const Dashboard = () => {
     } else {
       localStorage.removeItem('adminAuth');
     }
+    window.dispatchEvent(new Event('authchange'));
   }, [auth]);
+
+  useEffect(() => {
+    const syncAuth = () => {
+      const stored = localStorage.getItem('adminAuth');
+      setAuth(stored ? JSON.parse(stored) : null);
+    };
+
+    window.addEventListener('authchange', syncAuth);
+    window.addEventListener('storage', syncAuth);
+
+    return () => {
+      window.removeEventListener('authchange', syncAuth);
+      window.removeEventListener('storage', syncAuth);
+    };
+  }, []);
 
   const fetchDashboard = async (authHeaders = headers) => {
     if (!auth?.access_token && !authHeaders.Authorization) {

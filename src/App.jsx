@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import AdminLayout from './layouts/AdminLayout';
 import AppLayout from './layouts/AppLayout';
@@ -35,6 +35,30 @@ const RouteLoader = () => (
   </div>
 );
 
+const ProtectedRoute = ({ storageKey, fallbackPath = '/login' }) => {
+  const [isAuthorized, setIsAuthorized] = useState(() => Boolean(localStorage.getItem(storageKey)));
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setIsAuthorized(Boolean(localStorage.getItem(storageKey)));
+    };
+
+    window.addEventListener('authchange', syncAuth);
+    window.addEventListener('storage', syncAuth);
+
+    return () => {
+      window.removeEventListener('authchange', syncAuth);
+      window.removeEventListener('storage', syncAuth);
+    };
+  }, [storageKey]);
+
+  if (!isAuthorized) {
+    return <Navigate to={fallbackPath} replace />;
+  }
+
+  return <Outlet />;
+};
+
 const App = () => {
   return (
     <AppProvider>
@@ -55,17 +79,22 @@ const App = () => {
               <Route path="/login" element={<LoginForm />} />
               <Route path="/loginjobposter" element={<LoginJobPoster />} />
               <Route path="/accountsignup" element={<AccountSignup />} />
-              <Route path="/JobPostForm" element={<JobPostForm />} />
               <Route path="/testimonial" element={<Testimonial />} />
               <Route path="/userprofile" element={<ProfilePage />} />
               <Route path="/userprofilee" element={<UserProfilee />} />
               <Route path="/company" element={<CompanyProfile />} />
               <Route path="/userform" element={<UserForm />} />
+
+              <Route element={<ProtectedRoute storageKey="jobPosterAuth" />}>
+                <Route path="/JobPostForm" element={<JobPostForm />} />
+              </Route>
             </Route>
 
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="admins" element={<Admin />} />
+            <Route element={<ProtectedRoute storageKey="adminAuth" />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="admins" element={<Admin />} />
+              </Route>
             </Route>
           </Routes>
         </Suspense>

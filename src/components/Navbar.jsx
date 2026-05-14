@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
 const navItems = [
@@ -16,11 +16,27 @@ const navLinkClass = ({ isActive }) =>
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { logoutUser, user } = useAppContext();
-  const jobPosterAuth = JSON.parse(localStorage.getItem('jobPosterAuth') || 'null');
-  const adminAuth = JSON.parse(localStorage.getItem('adminAuth') || 'null');
+  const navigate = useNavigate();
+  const [jobPosterAuth, setJobPosterAuth] = useState(() => JSON.parse(localStorage.getItem('jobPosterAuth') || 'null'));
+  const [adminAuth, setAdminAuth] = useState(() => JSON.parse(localStorage.getItem('adminAuth') || 'null'));
   const jobPoster = jobPosterAuth?.jobPoster || null;
   const admin = adminAuth?.admin || null;
   const canPostJob = Boolean(jobPoster || admin);
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setJobPosterAuth(JSON.parse(localStorage.getItem('jobPosterAuth') || 'null'));
+      setAdminAuth(JSON.parse(localStorage.getItem('adminAuth') || 'null'));
+    };
+
+    window.addEventListener('authchange', syncAuth);
+    window.addEventListener('storage', syncAuth);
+
+    return () => {
+      window.removeEventListener('authchange', syncAuth);
+      window.removeEventListener('storage', syncAuth);
+    };
+  }, []);
 
   const sessionLabel = user?.firstName || jobPoster?.firstName || admin?.firstName || 'Profile';
   const sessionLink = user ? '/userprofile' : admin ? '/admin' : '/JobPostForm';
@@ -29,7 +45,9 @@ const Navbar = () => {
     logoutUser();
     localStorage.removeItem('jobPosterAuth');
     localStorage.removeItem('adminAuth');
+    window.dispatchEvent(new Event('authchange'));
     setOpen(false);
+    navigate('/login');
   };
 
   return (

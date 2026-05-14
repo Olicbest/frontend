@@ -20,7 +20,13 @@ const LoginForm = () => {
     const result = await loginUser({ email, password });
 
     if (result.success) {
-      navigate('/userprofile');
+      if (result.role === 'ADMIN') {
+        navigate('/admin');
+      } else if (result.role === 'COMPANY_POSTER') {
+        navigate('/JobPostForm');
+      } else {
+        navigate('/userprofile');
+      }
     } else {
       setError(result.error || 'Login failed. Please try again.');
     }
